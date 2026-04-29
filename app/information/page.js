@@ -7,6 +7,7 @@ import infoData from '../../data/information.json';
 export default function InformationPage() {
   const [completedInfo, setCompletedInfo] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [username, setUsername] = useState(null);
 
   useEffect(() => {
     fetch('/api/me')
@@ -18,21 +19,23 @@ export default function InformationPage() {
         return res.json();
       })
       .then((data) => {
-        if (data?.progress?.tasks) {
-          setCompletedInfo(data.progress.tasks);
+        if (data) {
+          setUsername(data.username);
+          const key = `progress_info_${data.username}`;
+          const stored = localStorage.getItem(key);
+          if (stored) {
+            setCompletedInfo(JSON.parse(stored));
+          }
         }
         setLoading(false);
       });
   }, []);
 
-  const markComplete = async (itemId) => {
-    const res = await fetch('/api/progress', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type: 'task', itemId }),
-    });
-    if (res.ok) {
-      setCompletedInfo((prev) => [...prev, itemId]);
+  const markComplete = (itemId) => {
+    if (!completedInfo.includes(itemId)) {
+      const updated = [...completedInfo, itemId];
+      setCompletedInfo(updated);
+      localStorage.setItem(`progress_info_${username}`, JSON.stringify(updated));
     }
   };
 
