@@ -1,0 +1,14 @@
+{
+  "students": [
+    {
+      "username": "student1",
+      "password": "pass123",
+      "fullName": "Student One",
+      "progress": {
+        "tasks": [],
+        "tests": [],
+        "lastLogin": null
+      }
+    }
+  ]
+}
