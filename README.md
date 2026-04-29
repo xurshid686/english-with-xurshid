@@ -2,35 +2,43 @@
 
 A minimalistic English learning website for students.
 
-## Sections
-- 📝 **Tasks** — Controlled exercises and writing tasks
-- ℹ️ **Information** — Reading materials and class notes
-- 📋 **Tests** — Quizzes and downloadable test files
+## Features
 
-## How to Add New Content
+- **Student Login** - Each student has their own username and password
+- **Progress Tracking** - Students can mark tasks, information, and tests as complete
+- **Dashboard** - Each student sees their own progress statistics
+- **Three Sections**:
+  - **Tasks** - Controlled exercises and writing tasks
+  - **Information** - Reading materials and class notes
+  - **Tests** - Quizzes and downloadable test files
 
-To add new material to any section, edit the corresponding file in the `data/` folder:
+## How to Add New Students
 
-- `data/tasks.json` — for new tasks
-- `data/information.json` — for new information items
-- `data/tests.json` — for new tests
+Edit `data/students.json` and add a new student entry:
 
-### Example: Adding a new task
 ```json
 {
-  "id": 2,
-  "title": "Task 2: Describing Your Room",
-  "description": "Write 8 sentences describing your room using adjectives.",
-  "type": "text",
-  "file": null,
-  "link": null,
-  "image": null
+  "username": "student2",
+  "password": "password123",
+  "fullName": "Student Name",
+  "progress": {
+    "tasks": [],
+    "tests": [],
+    "lastLogin": null
+  }
 }
 ```
 
-- To add a **PDF**: upload it to `public/files/` and set `"file": "/files/yourfile.pdf"`
-- To add an **image**: upload it to `public/images/` and set `"image": "/images/yourimage.jpg"`
-- To add a **link**: set `"link": "https://example.com"`
+## How to Add New Content
+
+Edit the corresponding file in the `data/` folder:
+
+- `data/tasks.json` - for new tasks
+- `data/information.json` - for new information items
+- `data/tests.json` - for new tests
+
+Each item should have: `id`, `title`, `description`, and optionally `image`, `file`, or `link`.
 
 ## Deployment
-This site is deployed on [Vercel](https://vercel.com). Every push to `main` auto-deploys.
+
+This site is deployed on Vercel. Every push to the `main` branch automatically triggers a redeployment.
