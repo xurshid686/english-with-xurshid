@@ -7,6 +7,7 @@ import testData from '../../data/tests.json';
 export default function TestsPage() {
   const [completedTests, setCompletedTests] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [username, setUsername] = useState(null);
 
   useEffect(() => {
     fetch('/api/me')
@@ -18,21 +19,23 @@ export default function TestsPage() {
         return res.json();
       })
       .then((data) => {
-        if (data?.progress?.tests) {
-          setCompletedTests(data.progress.tests);
+        if (data) {
+          setUsername(data.username);
+          const key = `progress_tests_${data.username}`;
+          const stored = localStorage.getItem(key);
+          if (stored) {
+            setCompletedTests(JSON.parse(stored));
+          }
         }
         setLoading(false);
       });
   }, []);
 
-  const markComplete = async (itemId) => {
-    const res = await fetch('/api/progress', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type: 'test', itemId }),
-    });
-    if (res.ok) {
-      setCompletedTests((prev) => [...prev, itemId]);
+  const markComplete = (itemId) => {
+    if (!completedTests.includes(itemId)) {
+      const updated = [...completedTests, itemId];
+      setCompletedTests(updated);
+      localStorage.setItem(`progress_tests_${username}`, JSON.stringify(updated));
     }
   };
 
