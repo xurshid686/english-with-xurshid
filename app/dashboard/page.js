@@ -5,6 +5,8 @@ import styles from './page.module.css';
 
 export default function DashboardPage() {
   const [student, setStudent] = useState(null);
+  const [completedTasks, setCompletedTasks] = useState(0);
+  const [completedTests, setCompletedTests] = useState(0);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
@@ -20,6 +22,10 @@ export default function DashboardPage() {
       .then((data) => {
         if (data) {
           setStudent(data);
+          const tasksStored = localStorage.getItem(`progress_tasks_${data.username}`);
+          const testsStored = localStorage.getItem(`progress_tests_${data.username}`);
+          if (tasksStored) setCompletedTasks(JSON.parse(tasksStored).length);
+          if (testsStored) setCompletedTests(JSON.parse(testsStored).length);
         }
         setLoading(false);
       });
@@ -30,23 +36,8 @@ export default function DashboardPage() {
     router.push('/login');
   };
 
-  const markComplete = async (type, itemId) => {
-    const res = await fetch('/api/progress', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type, itemId }),
-    });
-    if (res.ok) {
-      const data = await res.json();
-      setStudent((prev) => ({ ...prev, progress: data.progress }));
-    }
-  };
-
   if (loading) return <div className={styles.loading}>Loading...</div>;
   if (!student) return null;
-
-  const completedTasks = student.progress?.tasks?.length || 0;
-  const completedTests = student.progress?.tests?.length || 0;
 
   return (
     <main className={styles.container}>
